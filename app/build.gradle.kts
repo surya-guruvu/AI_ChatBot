@@ -1,7 +1,23 @@
+import java.util.Properties
+
+buildscript {
+    dependencies {
+        classpath(libs.secrets.gradle.plugin)
+    }
+}
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1"
 }
+
+
+
+val localProperties = Properties()
+file(rootDir.absolutePath + "/local.properties").inputStream().use { localProperties.load(it) }
+
+// Fetch the API key from local.properties
+val geminiApiKey: String = localProperties.getProperty("gemini.api.key") ?: ""
 
 android {
     namespace = "com.example.ai_chatbot_app"
@@ -18,6 +34,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
     }
 
     buildTypes {
@@ -28,6 +45,7 @@ android {
                 "proguard-rules.pro"
             )
         }
+
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -37,6 +55,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
+        buildConfig = true // Ensure this is set to true
         compose = true
     }
     composeOptions {
@@ -47,6 +66,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
 }
 
 dependencies {
@@ -72,5 +92,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.generativeai)
+    implementation(libs.androidx.navigation.compose)
 
 }

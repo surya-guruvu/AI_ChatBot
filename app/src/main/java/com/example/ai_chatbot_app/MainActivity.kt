@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -79,27 +80,33 @@ fun HomeScreen(context: Context,navController: NavController){
 }
 
 @Composable
-fun AlarmScreen(context: Context) {
+fun AlarmScreen(context: Context,alarmViewModel: AlarmViewModel = viewModel()) {
+
+    val alarmData by alarmViewModel.alarmData.observeAsState()
+
+    alarmData?.let {
+        setSystemAlarm(context,it.hour,it.minutes,it.message)
+    }
+
     Column {
         // Button to set the alarm for a specific time
         Button(onClick = {
-            setSystemAlarm(context,hour = 23, minute = 1)
+            alarmViewModel.setAlarm(23,45,"Testing Alarm")
         }) {
             Text("Set Alarm for 7:00 AM")
         }
     }
 }
 
-fun  setSystemAlarm(context: Context,hour: Int, minute: Int) {
+fun  setSystemAlarm(context: Context,hour: Int, minute: Int, message: String) {
     val alarmIntent = Intent(AlarmClock.ACTION_SET_ALARM).apply {
         putExtra(AlarmClock.EXTRA_HOUR,hour)
         putExtra(AlarmClock.EXTRA_MINUTES,minute)
-        putExtra(AlarmClock.EXTRA_MESSAGE,"Morning Alarm")
+        putExtra(AlarmClock.EXTRA_MESSAGE,message)
         putExtra(AlarmClock.EXTRA_SKIP_UI,true)
     }
 
-        context.startActivity(alarmIntent)
-
+    context.startActivity(alarmIntent)
 }
 
 

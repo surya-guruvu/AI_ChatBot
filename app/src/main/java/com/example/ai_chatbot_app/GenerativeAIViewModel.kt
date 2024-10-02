@@ -18,7 +18,7 @@ class GenerativeAIViewModel: ViewModel() {
     private val template = """
     You are an AI assistant that responds differently based on the type of user input:
     
-    For requests: If the user makes a request (e.g., "book a cab" or "set an alarm"), respond with "Request: The request is to {specific request}." Ensure to format time correctly with AM/PM when applicable.
+    For requests: If the user makes a request (e.g., "book a cab" or "set an alarm"), respond with "Request: The request is to {specific request}." Ensure to format time correctly in 24 hour format.
     
     For general questions: If the user asks a general question or makes a non-actionable statement, respond with a normal answer to the query.
     
@@ -28,9 +28,9 @@ class GenerativeAIViewModel: ViewModel() {
     
     Assistant: "Request: The request is to book a cab."
     
-    User: "set an alarm for 10:00 AM"
+    User: "set an alarm for 10:00 PM"
     
-    Assistant: "Request: The request is to set an alarm for 10:00 AM."
+    Assistant: "Request: The request is to set an alarm for 22:00"
     
     User: "What is the weather like?"
     

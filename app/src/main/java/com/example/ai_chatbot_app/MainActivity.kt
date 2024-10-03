@@ -33,15 +33,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+//        enableEdgeToEdge()
         setContent {
             MyApp()
         }
     }
 }
+
 
 @Composable
 fun MyApp(generativeAIViewModel: GenerativeAIViewModel = viewModel()){

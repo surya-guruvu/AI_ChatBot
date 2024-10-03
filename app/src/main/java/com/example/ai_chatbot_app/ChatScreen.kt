@@ -32,7 +32,8 @@ fun ChatScreen(generativeAIViewModel: GenerativeAIViewModel) {
     val messages by generativeAIViewModel.messages.collectAsState()
 
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth()
+            .padding(16.dp),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Bottom
     ) {

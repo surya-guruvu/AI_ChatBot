@@ -9,6 +9,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1"
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 
@@ -94,5 +96,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.generativeai)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+}
 
+kapt {
+    correctErrorTypes = true
 }

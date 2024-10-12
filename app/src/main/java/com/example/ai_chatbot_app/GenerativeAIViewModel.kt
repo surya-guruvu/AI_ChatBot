@@ -1,6 +1,7 @@
 package com.example.ai_chatbot_app
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.ai.client.generativeai.GenerativeModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +15,19 @@ enum class Sender{
 
 data class Message(val sender: Sender, val message: String)
 
-class GenerativeAIViewModel: ViewModel() {
+class  GenerativeAIViewModelFactory(private val alarmViewModel: AlarmViewModel): ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if(modelClass.isAssignableFrom(GenerativeAIViewModel::class.java)){
+            @Suppress("UNCHECKED_CAST")
+            return  GenerativeAIViewModel(alarmViewModel) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel Class")
+    }
+}
+
+class GenerativeAIViewModel(private val alarmViewModel: AlarmViewModel): ViewModel() {
+
+
     private val template = """
         You are an AI assistant that tailors responses based on the type of user input:
         
@@ -72,7 +85,27 @@ class GenerativeAIViewModel: ViewModel() {
 
             val assistantMessage = Message(Sender.ASSISTANT, response.text.toString())
             _messages.value += assistantMessage
+
+            if(response.text?.contains("Request: The request is to set an alarm for") == true){
+                setAlarm(response.text!!)
+            }
         }
+    }
+
+    private fun setAlarm(response: String){
+        val timeRegex = Regex("(\\d{1,2}:\\d{2})")
+        val matchResult = timeRegex.find(response)
+
+        val time = matchResult?.groups?.get(1)?.value
+
+        time?.let {
+            val (hh, mm) = time.split(":").map { it.toInt() }
+
+            alarmViewModel.setAlarm(hh,mm,"message")
+        }
+
+
+        println("Extracted time: $time")
     }
 
 }

@@ -20,6 +20,7 @@ file(rootDir.absolutePath + "/local.properties").inputStream().use { localProper
 
 // Fetch the API key from local.properties
 val geminiApiKey: String = localProperties.getProperty("gemini.api.key") ?: ""
+val spotifyClientId: String = localProperties.getProperty("spotify.client.id") ?: ""
 
 android {
     namespace = "com.example.ai_chatbot_app"
@@ -37,6 +38,7 @@ android {
             useSupportLibrary = true
         }
         buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
+        buildConfigField("String", "SPOTIFY_CLIENT_ID", "\"$spotifyClientId\"")
     }
 
     buildTypes {
@@ -86,6 +88,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.storage)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -100,6 +103,12 @@ dependencies {
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.material.icons.extended)
+    implementation(files("libs/spotify-app-remote-release-0.7.2.aar"))
+    implementation(libs.gson)
+    implementation(libs.auth)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+//    implementation(libs.spotify.protocol)
 }
 
 kapt {
